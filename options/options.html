@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Options</title>
+  </head>
+  <body>
+    <h1>默认设置</h1>
+    <form>
+      <!-- https://dev.to/devggaurav/let-s-create-a-custom-toggle-switch-using-html-and-css-33df -->
+      <!-- https://blog.logrocket.com/how-to-style-forms-with-css-a-beginners-guide/ -->
+      <label
+        >隐藏用户名: <input type="checkbox" name="pseudonym" id="pseudonym"
+      /></label>
+
+      <label>导出文件格式:</label>
+      <div class="file-formats">
+        <!-- <input type="radio" name="file-format" id="pdf" value="pdf" />
+        <label for="pdf">PDF</label>
+
+        <input type="radio" name="file-format" id="png" value="png" />
+        <label for="png">PNG</label> -->
+
+        <input type="radio" name="file-format" id="md" value="md" />
+        <label for="md">Markdown</label>
+
+        <input type="radio" name="file-format" id="html" value="html" />
+        <label for="html">HTML</label>
+      </div>
+
+      <label
+        >内容范围:
+        <select name="range" id="range">
+          <option value="all">完整内容</option>
+          <option value="first-page">仅首页内容</option>
+          <option value="first-floor">仅主题楼内容</option>
+        </select>
+      </label>
+
+      <button type="submit">保存设置</button>
+    </form>
+
+    <script src="options.js"></script>
+  </body>
+</html>

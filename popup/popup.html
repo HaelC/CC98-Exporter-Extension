@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Popup</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>导出设置</h1>
+
+    <form>
+      <label
+        >导出文件名:
+        <input name="filename" id="filename" />
+      </label>
+
+      <label
+        >隐藏用户名: <input type="checkbox" name="pseudonym" id="pseudonym"
+      /></label>
+
+      <label>导出文件格式:</label>
+      <div class="file-formats">
+        <!-- <input type="radio" name="file-format" id="pdf" value="pdf" />
+        <label for="pdf">PDF</label>
+
+        <input type="radio" name="file-format" id="png" value="png" />
+        <label for="png">PNG</label> -->
+
+        <input type="radio" name="file-format" id="md" value="md" />
+        <label for="md">Markdown</label>
+
+        <input type="radio" name="file-format" id="html" value="html" />
+        <label for="html">HTML</label>
+      </div>
+
+      <label
+        >内容范围:
+        <select name="range" id="range">
+          <option value="all">完整内容</option>
+          <option value="first-page">仅首页内容</option>
+          <option value="first-floor">仅主题楼内容</option>
+        </select>
+      </label>
+
+      <button type="submit">导出内容</button>
+    </form>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

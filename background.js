@@ -1,5 +1,5 @@
 const checkURL = (url) => {
-  if (url.startsWith("https://www.google.com")) {
+  if (url.startsWith("https://www.cc98.org/topic/")) {
     chrome.action.enable();
   } else {
     chrome.action.disable();

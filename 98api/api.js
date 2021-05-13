@@ -36,11 +36,34 @@ export async function getAllPosts(topic) {
     if (response.status === 200) {
       const result = await response.json();
       // console.log(result);
-      topic.posts = topic.posts.concat(result);
+      topic.posts = topic.posts.concat(
+        result.map((post) => getPostFields(post))
+      );
       if (result.length < 10) {
         return;
       }
       start += 10;
     }
   }
+}
+
+function getPostFields(post) {
+  return {
+    content: post.content,
+    awards: post.awards.map((award) => getAwardFields(award)),
+    dislikeCount: post.dislikeCount,
+    likeCount: post.likeCount,
+    username: post.userName,
+    time: post.time,
+    lastUpdateTime: post.lastUpdateTime,
+    lastUpdateAuthor: post.lastUpdateAuthor,
+  };
+}
+
+function getAwardFields(award) {
+  return {
+    content: award.content,
+    reason: award.reason,
+    operatorName: award.operatorName,
+  };
 }

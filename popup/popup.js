@@ -1,4 +1,5 @@
-import { getTopic, getHotPosts, getAllPosts } from "../98api/api.js";
+import { getTopic, getHotPosts, getAllPosts } from "../api/98api.js";
+import { writeToJSON } from "../api/export.js";
 
 function constructOptions() {
   chrome.storage.sync.get(["pseudonym", "fileFormat", "range"], (data) => {
@@ -28,4 +29,5 @@ form.addEventListener("submit", async (e) => {
   await getAllPosts(topic);
   // Promise.all() to run async functions in parallel.
   console.log(topic);
+  writeToJSON("test2.json", topic);
 });

@@ -1,11 +1,11 @@
 import { getTopic, getHotPosts, getAllPosts } from "../api/98api.js";
-import { writeToJSON } from "../api/export.js";
+import { writeToFile } from "../api/export.js";
 
 function constructOptions() {
   chrome.storage.sync.get(["pseudonym", "fileFormat", "range"], (data) => {
     const { pseudonym, fileFormat, range } = data;
     document.getElementById("pseudonym").checked = pseudonym ? pseudonym : true;
-    document.getElementById(fileFormat ? fileFormat : "html").checked = true;
+    document.getElementById(fileFormat ? fileFormat : "json").checked = true;
     document.getElementById("range").value = range ? range : "all";
   });
 }
@@ -24,10 +24,15 @@ form.addEventListener("submit", async (e) => {
   topic.id = topicId;
   topic.posts = [];
 
+  const filename = form.elements["filename"].value;
+  const pseudonym = form.elements["pseudonym"].checked;
+  const fileFormat = form.elements["file-format"].value;
+  const range = form.elements["range"].value;
+
   await getTopic(topic);
   await getHotPosts(topic);
   await getAllPosts(topic);
   // Promise.all() to run async functions in parallel.
-  console.log(topic);
-  writeToJSON("test2.json", topic);
+
+  writeToFile(filename, fileFormat, topic);
 });

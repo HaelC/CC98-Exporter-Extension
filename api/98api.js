@@ -67,3 +67,43 @@ function getAwardFields(award) {
     operatorName: award.operatorName,
   };
 }
+
+const userDict = {};
+const usedName = new Set();
+
+function generateRandomHex() {
+  // https://stackoverflow.com/a/58326357
+  const genRanHex = (size) =>
+    [...Array(size)]
+      .map(() => Math.floor(Math.random() * 16).toString(16))
+      .join("");
+  return genRanHex;
+}
+
+function generateRandomName() {
+  let randomName = generateRandomHex();
+  while (usedName.has(randomName)) {
+    randomName = generateRandomHex();
+  }
+  usedName.add(randomName);
+}
+
+function anonymizePostAuthor(post) {
+  const username = post.username;
+  if (userDict[username]) {
+    post.username = userDict[username];
+  } else {
+    post.username = generateRandomName();
+    userDict[username] = post.username;
+  }
+}
+
+function anonymizeAwardOperator(award) {
+  const username = award.operatorName;
+  if (userDict[username]) {
+    award.operatorName = userDict[username];
+  } else {
+    award.operatorName = generateRandomName();
+    userDict[username] = award.operatorName;
+  }
+}

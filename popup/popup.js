@@ -1,4 +1,4 @@
-import { getTopic, getHotPosts, getAllPosts } from "../api/98api.js";
+import { getTopic, getHotPosts, getAllPosts, anonymize } from "../api/98api.js";
 import { writeToFile } from "../api/export.js";
 
 function constructOptions() {
@@ -25,7 +25,7 @@ form.addEventListener("submit", async (e) => {
   topic.posts = [];
 
   const filename = form.elements["filename"].value;
-  const pseudonym = form.elements["pseudonym"].checked;
+  const usePseudonym = form.elements["pseudonym"].checked;
   const fileFormat = form.elements["file-format"].value;
   const range = form.elements["range"].value;
 
@@ -33,6 +33,10 @@ form.addEventListener("submit", async (e) => {
   await getHotPosts(topic);
   await getAllPosts(topic);
   // Promise.all() to run async functions in parallel.
+
+  if (usePseudonym) {
+    anonymize(topic);
+  }
 
   writeToFile(filename, fileFormat, topic);
 });

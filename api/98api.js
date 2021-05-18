@@ -24,7 +24,7 @@ export async function getHotPosts(topic) {
   if (response.status === 200) {
     const result = await response.json();
     // console.log(result);
-    topic.hotPosts = result;
+    topic.hotPosts = result.map((hotPost) => getPostFields(hotPost));
   }
 }
 
@@ -64,46 +64,67 @@ function getAwardFields(award) {
   return {
     content: award.content,
     reason: award.reason,
-    operatorName: award.operatorName,
+    username: award.operatorName,
   };
 }
 
 const userDict = {};
 const usedName = new Set();
 
-function generateRandomHex() {
-  // https://stackoverflow.com/a/58326357
-  const genRanHex = (size) =>
-    [...Array(size)]
-      .map(() => Math.floor(Math.random() * 16).toString(16))
-      .join("");
-  return genRanHex;
-}
+// https://stackoverflow.com/a/58326357
+const genRanHex = (size) =>
+  [...Array(size)]
+    .map(() => Math.floor(Math.random() * 16).toString(16))
+    .join("");
 
 function generateRandomName() {
-  let randomName = generateRandomHex();
+  let randomName = genRanHex(6);
   while (usedName.has(randomName)) {
-    randomName = generateRandomHex();
+    randomName = genRanHex(6);
   }
   usedName.add(randomName);
+  return randomName;
 }
 
-function anonymizePostAuthor(post) {
-  const username = post.username;
-  if (userDict[username]) {
-    post.username = userDict[username];
-  } else {
-    post.username = generateRandomName();
-    userDict[username] = post.username;
+function anonymizeExplicitUsername(item) {
+  const username = item.username;
+  if (!userDict[username]) {
+    userDict[username] = generateRandomName();
+  }
+  item.username = userDict[username];
+
+  if (item.lastUpdateAuthor) {
+    const lastAuthor = item.lastUpdateAuthor;
+    if (!userDict[lastAuthor]) {
+      userDict[lastAuthor] = generateRandomName();
+    }
+    item.lastUpdateAuthor = userDict[lastAuthor];
   }
 }
 
-function anonymizeAwardOperator(award) {
-  const username = award.operatorName;
-  if (userDict[username]) {
-    award.operatorName = userDict[username];
-  } else {
-    award.operatorName = generateRandomName();
-    userDict[username] = award.operatorName;
+function anonymizeImplicitUsername(post) {
+  // only deal with the username in quotes now
+  const regexUsername = /用户(?:匿名)?(.*?)在20/g;
+  const matches = post.content.matchAll(regexUsername);
+  for (const match of matches) {
+    const username = match[1];
+    post.content = post.content.replaceAll(username, userDict[username]);
+  }
+}
+
+export function anonymize(topic) {
+  for (let post of topic.hotPosts) {
+    anonymizeExplicitUsername(post);
+    anonymizeImplicitUsername(post);
+    for (let award of post.awards) {
+      anonymizeExplicitUsername(award);
+    }
+  }
+  for (let post of topic.posts) {
+    anonymizeExplicitUsername(post);
+    anonymizeImplicitUsername(post);
+    for (let award of post.awards) {
+      anonymizeExplicitUsername(award);
+    }
   }
 }
